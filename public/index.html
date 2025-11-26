@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Voting Real-Time</title>
+</head>
+
+<script>
+if (!localStorage.getItem("username")) {
+    window.location.href = "login.html";
+}
+</script>
+
+<body>
+
+<h1>Sistem Voting Real-Time</h1>
+<div id="options"></div>
+
+<h2>Hasil:</h2>
+<ul id="results"></ul>
+
+<script src="script.js" defer></script>
+
+</body>
+</html>

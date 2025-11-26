@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Voter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-purple-700 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded-xl shadow-lg w-80">
+    <h1 class="text-xl font-semibold text-center mb-4">Login Voting</h1>
+
+    <input id="username" class="w-full border px-3 py-2 rounded" placeholder="Username">
+
+    <button 
+        onclick="login()" 
+        class="mt-4 w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-800 transition">
+        Masuk
+    </button>
+</div>
+
+<script>
+function login() {
+    const username = document.getElementById("username").value;
+
+    if (!username.trim()) {
+        alert("Username tidak boleh kosong!");
+        return;
+    }
+
+    localStorage.setItem("username", username);
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
