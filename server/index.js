@@ -6,6 +6,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const multer = require("multer");
+const fs = require("fs");
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -74,7 +75,6 @@ app.post("/register", async (req, res) => {
         res.status(500).json({ error: true, message: "Gagal memproses pendaftaran." });
     }
 });
-
 
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
@@ -174,7 +174,6 @@ app.post("/admin/options", upload.single('photo'), (req, res) => {
 
     if (!no_urut || !name || !visi || !misi) {
         if (req.file) {
-            const fs = require('fs');
             fs.unlinkSync(req.file.path);
         }
         return res.status(400).json({ error: true, message: "Nomor Urut, Nama, Visi, dan Misi wajib diisi!" });
@@ -188,7 +187,6 @@ app.post("/admin/options", upload.single('photo'), (req, res) => {
     db.query(q, [no_urut, name, npm, visi, misi, photoFileName], (err, result) => {
         if (err) {
             if (req.file) {
-                const fs = require('fs');
                 fs.unlinkSync(req.file.path);
             }
             if (err.code === 'ER_DUP_ENTRY') {
