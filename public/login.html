@@ -4,33 +4,95 @@
     <meta charset="UTF-8">
     <title>Login Voter</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>const SERVER_URL = "http://localhost:8080";</script>
 </head>
 
 <body class="bg-purple-700 min-h-screen flex items-center justify-center">
 
 <div class="bg-white p-8 rounded-xl shadow-lg w-80">
-    <h1 class="text-xl font-semibold text-center mb-4">Login Voting</h1>
+    <h1 class="text-2xl font-bold text-center mb-6 text-purple-700">Login Pemilih</h1>
 
-    <input id="username" class="w-full border px-3 py-2 rounded" placeholder="Username">
+    <div id="alertMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span id="alertText" class="block sm:inline"></span>
+    </div>
+
+    <div class="mb-4">
+        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+        <input 
+            id="username" 
+            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" 
+            placeholder="Username"
+            type="text">
+    </div>
+
+    <div class="mb-6">
+        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+        <input 
+            id="password" 
+            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" 
+            placeholder="Password"
+            type="password"
+            onkeypress="if(event.key === 'Enter') login()">
+    </div>
 
     <button 
+        id="loginButton"
         onclick="login()" 
-        class="mt-4 w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-800 transition">
+        class="mt-2 w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-800 transition duration-150 ease-in-out">
         Masuk
     </button>
 </div>
 
 <script>
-function login() {
-    const username = document.getElementById("username").value;
+function showAlert(message) {
+    const alertDiv = document.getElementById("alertMessage");
+    document.getElementById("alertText").textContent = message;
+    alertDiv.classList.remove("hidden");
+    setTimeout(() => {
+        alertDiv.classList.add("hidden");
+    }, 5000);
+}
 
-    if (!username.trim()) {
-        alert("Username tidak boleh kosong!");
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const loginButton = document.getElementById("loginButton");
+
+    if (!username || !password) {
+        showAlert("Username dan Password wajib diisi!");
         return;
     }
 
-    localStorage.setItem("username", username);
-    window.location.href = "index.html";
+    loginButton.disabled = true;
+    loginButton.textContent = "Memproses...";
+
+    try {
+        const response = await fetch(`${SERVER_URL}/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            showAlert(data.message || "Login gagal.");
+        } else {
+            localStorage.setItem("username", username);
+            localStorage.setItem("voter_id", data.voter_id);
+            localStorage.setItem("is_voted", data.is_voted);
+
+            window.location.href = "index.html";
+        }
+    } catch (error) {
+        console.error("Kesalahan jaringan/server:", error);
+        showAlert("Terjadi kesalahan koneksi ke server.");
+    } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Masuk";
+    }
 }
 </script>
 
