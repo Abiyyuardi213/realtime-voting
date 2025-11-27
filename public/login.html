@@ -2,99 +2,223 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Login Voter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Pemilih</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>const SERVER_URL = "http://localhost:8080";</script>
-</head>
-
-<body class="bg-purple-700 min-h-screen flex items-center justify-center">
-
-<div class="bg-white p-8 rounded-xl shadow-lg w-80">
-    <h1 class="text-2xl font-bold text-center mb-6 text-purple-700">Login Pemilih</h1>
-
-    <div id="alertMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span id="alertText" class="block sm:inline"></span>
-    </div>
-
-    <div class="mb-4">
-        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-        <input 
-            id="username" 
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" 
-            placeholder="Username"
-            type="text">
-    </div>
-
-    <div class="mb-6">
-        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-        <input 
-            id="password" 
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" 
-            placeholder="Password"
-            type="password"
-            onkeypress="if(event.key === 'Enter') login()">
-    </div>
-
-    <button 
-        id="loginButton"
-        onclick="login()" 
-        class="mt-2 w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-800 transition duration-150 ease-in-out">
-        Masuk
-    </button>
-</div>
-
-<script>
-function showAlert(message) {
-    const alertDiv = document.getElementById("alertMessage");
-    document.getElementById("alertText").textContent = message;
-    alertDiv.classList.remove("hidden");
-    setTimeout(() => {
-        alertDiv.classList.add("hidden");
-    }, 5000);
-}
-
-async function login() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
-    const loginButton = document.getElementById("loginButton");
-
-    if (!username || !password) {
-        showAlert("Username dan Password wajib diisi!");
-        return;
-    }
-
-    loginButton.disabled = true;
-    loginButton.textContent = "Memproses...";
-
-    try {
-        const response = await fetch(`${SERVER_URL}/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-            showAlert(data.message || "Login gagal.");
-        } else {
-            localStorage.setItem("username", username);
-            localStorage.setItem("voter_id", data.voter_id);
-            localStorage.setItem("is_voted", data.is_voted);
-
-            window.location.href = "index.html";
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
         }
-    } catch (error) {
-        console.error("Kesalahan jaringan/server:", error);
-        showAlert("Terjadi kesalahan koneksi ke server.");
-    } finally {
-        loginButton.disabled = false;
-        loginButton.textContent = "Masuk";
-    }
-}
-</script>
+        body {
+            /* font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; */
+            font-family: 'Inter', sans-serif;
+        }
+        .bg-gradient-modern {
+            background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        }
+        .text-accent-pink {
+            color: #e91e63;
+        }
+        .bg-accent-pink {
+            background-color: #e91e63;
+        }
+        .hover\:bg-accent-pink-dark:hover {
+            background-color: #c2185b;
+        }
+        .focus\:ring-accent-pink:focus {
+            --tw-ring-color: #e91e63;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .transition-smooth {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-field {
+            background: #f8f8fa;
+            border: 1.5px solid #e5e5e8;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            background: white;
+            border-color: #e91e63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #e91e63 0%, #d81b60 100%);
+            box-shadow: 0 8px 16px rgba(233, 30, 99, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(233, 30, 99, 0.4);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .btn-loading {
+            animation: pulse-subtle 1.5s ease-in-out infinite;
+        }
+        .alert-error {
+            background: #fff5f7;
+            border: 1px solid #f48fb1;
+            color: #c2185b;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .label-modern {
+            font-weight: 500;
+            color: #2c2c2c;
+            font-size: 0.95rem;
+        }
+        .link-accent {
+            position: relative;
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .link-accent::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e91e63;
+            transition: width 0.3s ease;
+        }
+        .link-accent:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-modern min-h-screen flex items-center justify-center p-4">
+    <div class="flex w-full max-w-4xl bg-white/40 glass-card rounded-2xl overflow-hidden shadow-2xl">
+        <!-- === Kolom Kiri (Logo Himpunan) === -->
+        <div class="hidden md:flex flex-col items-center justify-center w-1/2 bg-gradient-to-br from-pink-500 to-pink-600 p-10">
+            <img src="./image/hima-infor.png" alt="Logo Himpunan" class="w-50 h-50 object-contain mb-6 drop-shadow-xl">
+            <h2 class="text-white text-2xl font-bold tracking-wide">Himpunan Mahasiswa</h2>
+            <h2 class="text-white text-2xl font-bold tracking-wide">Teknik Informatika ITATS</h2>
+            <p class="text-white/80 text-sm mt-2">Sistem E-Voting Resmi</p>
+        </div>
+        <!-- === Kolom Kanan (Form Login Diperkecil) === -->
+        <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Login Pemilih</h1>
+                <p class="text-gray-500 text-sm">Silakan masuk untuk melanjutkan</p>
+            </div>
+            <div id="alertMessage" class="hidden alert-error rounded-lg px-4 py-3 mb-6 text-sm" role="alert">
+                <span id="alertText" class="block"></span>
+            </div>
+            <form class="space-y-5 max-w-sm mx-auto w-full" onsubmit="event.preventDefault(); login();">
+                <div>
+                    <label for="username" class="label-modern block mb-2">Username</label>
+                    <input 
+                        id="username" 
+                        type="text"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
+                        placeholder="Masukkan username Anda"
+                        autocomplete="username"
+                        required>
+                </div>
 
+                <div>
+                    <label for="password" class="label-modern block mb-2">Password</label>
+                    <input 
+                        id="password" 
+                        type="password"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
+                        placeholder="Masukkan password Anda"
+                        autocomplete="current-password"
+                        onkeypress="if(event.key === 'Enter') login()"
+                        required>
+                </div>
+
+                <button 
+                    id="loginButton"
+                    type="submit"
+                    class="btn-primary transition-smooth w-full text-white py-3 rounded-lg font-semibold mt-6 disabled:opacity-75">
+                    Masuk
+                </button>
+            </form>
+
+            <p class="mt-8 text-center text-sm text-gray-600">
+                Belum memiliki akun? 
+                <a href="register.html" class="link-accent">Daftar di sini</a>
+            </p>
+
+        </div>
+    </div>
+    <script>
+        function showAlert(message) {
+            const alertDiv = document.getElementById("alertMessage");
+            document.getElementById("alertText").textContent = message;
+            alertDiv.classList.remove("hidden");
+            setTimeout(() => {
+                alertDiv.classList.add("hidden");
+            }, 5000);
+        }
+
+        async function login() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const loginButton = document.getElementById("loginButton");
+
+            if (!username || !password) {
+                showAlert("Username dan Password wajib diisi!");
+                return;
+            }
+
+            loginButton.disabled = true;
+            loginButton.classList.add("btn-loading");
+            loginButton.textContent = "Memproses...";
+
+            try {
+                const response = await fetch(`${SERVER_URL}/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showAlert(data.message || "Login gagal.");
+                } else {
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("voter_id", data.voter_id);
+                    localStorage.setItem("is_voted", data.is_voted);
+
+                    window.location.href = "index.html";
+                }
+            } catch (error) {
+                console.error("Kesalahan jaringan/server:", error);
+                showAlert("Terjadi kesalahan koneksi ke server.");
+            } finally {
+                loginButton.disabled = false;
+                loginButton.classList.remove("btn-loading");
+                loginButton.textContent = "Masuk";
+            }
+        }
+    </script>
 </body>
 </html>

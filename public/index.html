@@ -3,24 +3,63 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Voting Real-Time</title>
+    <title>Sistem E-Voting Real-Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Definisikan URL server
+        const SERVER_URL = "http://localhost:8080";
+
+        // Cek status login
+        const voter_id = localStorage.getItem("voter_id");
+        if (!voter_id) {
+            window.location.href = "login.html";
+        }
+    </script>
 </head>
 
-<script>
-if (!localStorage.getItem("username")) {
-    window.location.href = "login.html";
-}
-</script>
+<body class="bg-gray-100 min-h-screen p-4">
 
-<body>
+    <div class="max-w-6xl mx-auto">
+        
+        <header class="bg-indigo-600 p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white">E-Voting Ketua Himpunan</h1>
+            <div class="text-white text-right">
+                <p>Halo, <span id="welcome-user" class="font-semibold"></span>!</p>
+                <button onclick="logout()" class="text-sm underline hover:text-indigo-200">Logout</button>
+            </div>
+        </header>
+        
+        <section id="voting-section" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Calon Kandidat Pilihan</h2>
+            <div id="options" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+            
+            <div id="voted-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mt-6" role="alert">
+                <span class="font-bold">Terima kasih!</span> Anda telah berhasil memberikan suara. Silakan lihat hasilnya di bawah.
+            </div>
+        </section>
 
-<h1>Sistem Voting Real-Time</h1>
-<div id="options"></div>
+        <hr class="my-8 border-gray-300">
 
-<h2>Hasil:</h2>
-<ul id="results"></ul>
+        <section>
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Hasil Suara Real-Time</h2>
+            <ul id="results" class="space-y-4">
+                </ul>
+        </section>
+        
+    </div>
 
-<script src="script.js" defer></script>
+    <script src="script.js" defer></script>
+    <script>
+        // Menampilkan nama user di header
+        document.getElementById('welcome-user').textContent = localStorage.getItem("username");
 
+        function logout() {
+            localStorage.removeItem("voter_id");
+            localStorage.removeItem("username");
+            localStorage.removeItem("is_voted");
+            window.location.href = "login.html";
+        }
+    </script>
 </body>
 </html>

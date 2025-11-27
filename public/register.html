@@ -2,58 +2,155 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Pemilih Baru</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>const SERVER_URL = "http://localhost:8080";</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #e91e63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(233, 30, 99, 0.3);
+        }
+
+        .register-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .link-underline {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e91e63;
+            transition: width 0.3s ease;
+        }
+
+        .link-underline:hover::after {
+            width: 100%;
+        }
+
+        .card-shadow {
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .success-alert {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-indigo-700 min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex items-center justify-center py-12 px-4">
 
-<div class="bg-white p-8 rounded-xl shadow-lg w-96">
-    <h1 class="text-2xl font-bold text-center mb-6 text-indigo-700">Pendaftaran Pemilih</h1>
+<div class="card-shadow bg-white rounded-2xl p-5 sm:p-6 md:p-10 w-full 
+            max-w-xs sm:max-w-sm md:max-w-md">
 
-    <div id="alertMessage" class="hidden border px-4 py-3 rounded relative mb-4" role="alert">
-        <span id="alertText" class="block sm:inline"></span>
+    <!-- Header -->
+    <div class="text-center mb-5 sm:mb-6 md:mb-8">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
+            Daftar Pemilih
+        </h1>
+        <p class="text-gray-500 text-xs sm:text-sm">Buat akun untuk mulai memilih</p>
     </div>
 
-    <div class="mb-4">
-        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-        <input 
-            id="username" 
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-            placeholder="Buat Username"
-            type="text">
+    <!-- Alert -->
+    <div id="alertMessage" class="hidden success-alert border px-3 py-2 sm:px-4 sm:py-3 rounded-lg relative mb-4 sm:mb-5 md:mb-6" role="alert">
+        <span id="alertText" class="block text-xs sm:text-sm"></span>
     </div>
 
-    <div class="mb-4">
-        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-        <input 
-            id="password" 
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-            placeholder="Buat Password"
-            type="password">
-    </div>
+    <!-- Form -->
+    <form class="space-y-3 sm:space-y-4 md:space-y-5">
+        <div>
+            <label for="username" class="block text-gray-700 text-xs sm:text-sm font-semibold mb-1 sm:mb-2">Username</label>
+            <input 
+                id="username" 
+                class="input-field w-full px-3 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-400 text-xs sm:text-sm"
+                placeholder="Buat username unik"
+                type="text">
+        </div>
 
-    <div class="mb-6">
-        <label for="npm" class="block text-gray-700 text-sm font-bold mb-2">NPM (Opsional)</label>
-        <input 
-            id="npm" 
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-            placeholder="NPM Mahasiswa (jika ada)"
-            type="text"
-            onkeypress="if(event.key === 'Enter') registerUser()">
-    </div>
+        <div>
+            <label for="password" class="block text-gray-700 text-xs sm:text-sm font-semibold mb-1 sm:mb-2">Password</label>
+            <input 
+                id="password" 
+                class="input-field w-full px-3 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-400 text-xs sm:text-sm"
+                placeholder="Buat password yang kuat"
+                type="password">
+        </div>
 
-    <button 
-        id="registerButton"
-        onclick="registerUser()" 
-        class="mt-2 w-full bg-indigo-600 text-white py-2 rounded font-semibold hover:bg-indigo-800 transition duration-150 ease-in-out">
-        Daftar
-    </button>
-    
-    <p class="mt-4 text-center text-sm text-gray-600">
+        <div>
+            <label for="npm" class="block text-gray-700 text-xs sm:text-sm font-semibold mb-1 sm:mb-2">
+                NPM <span class="text-gray-400 font-normal">(Opsional)</span>
+            </label>
+            <input 
+                id="npm" 
+                class="input-field w-full px-3 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-400 text-xs sm:text-sm"
+                placeholder="NPM Mahasiswa (jika ada)"
+                type="text"
+                onkeypress="if(event.key === 'Enter') registerUser()">
+        </div>
+
+        <button 
+            type="button"
+            id="registerButton"
+            onclick="registerUser()" 
+            class="register-btn mt-4 sm:mt-6 w-full text-white py-2.5 sm:py-3 rounded-lg font-semibold text-sm hover:shadow-lg transition duration-200">
+            Daftar
+        </button>
+    </form>
+
+    <!-- Link Login -->
+    <p class="mt-5 sm:mt-6 text-center text-xs sm:text-sm text-gray-600">
         Sudah punya akun? 
-        <a href="login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold">Login di sini</a>
+        <a href="login.html" class="link-underline text-pink-600 font-semibold hover:text-pink-700">Login di sini</a>
     </p>
 </div>
 
@@ -65,11 +162,12 @@ function showAlert(message, isSuccess = false) {
     
     alertText.textContent = message;
     alertDiv.classList.remove("hidden");
+    alertDiv.classList.add("success-alert");
     
     if (isSuccess) {
-        alertDiv.className = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4";
+        alertDiv.className = "success-alert bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg relative mb-6";
     } else {
-        alertDiv.className = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4";
+        alertDiv.className = "success-alert bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg relative mb-6";
     }
 
     setTimeout(() => {
