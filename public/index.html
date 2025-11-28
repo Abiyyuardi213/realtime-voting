@@ -3,56 +3,192 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem E-Voting Real-Time</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Definisikan URL server
-        const SERVER_URL = "http://localhost:8080";
 
-        // Cek status login
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        // const SERVER_URL = "http://localhost:8080";
+        const SERVER_URL = `http://${window.location.hostname}:8080`;
+        
+
         const voter_id = localStorage.getItem("voter_id");
         if (!voter_id) {
             window.location.href = "login.html";
         }
     </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        /* Modern card with enhanced shadow and refined styling */
+        .card {
+            background: white;
+            border-radius: 0.875rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Refined vote button with modern gradient and premium effects */
+        .vote-btn {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.25);
+            filter: brightness(1.05);
+        }
+
+        .vote-btn:active {
+            transform: translateY(0);
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+        }
+
+        /* Modern header with sleek design */
+        .modern-header {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            border-radius: 1.125rem;
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* Exclusive logout button styling */
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Logout icon styling */
+        .logout-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 0.875rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        /* Section titles with refined styling */
+        .section-title {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        button {
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen p-4">
+<body class="min-h-screen p-4">
 
-    <div class="max-w-6xl mx-auto">
-        
-        <header class="bg-indigo-600 p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-white">E-Voting Ketua Himpunan</h1>
-            <div class="text-white text-right">
-                <p>Halo, <span id="welcome-user" class="font-semibold"></span>!</p>
-                <button onclick="logout()" class="text-sm underline hover:text-indigo-200">Logout</button>
+    <div class="max-w-5xl mx-auto">
+
+        <!-- Modern sleek header with premium logout button -->
+        <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">E-Voting</h1>
+                <p class="text-pink-100 text-sm mt-1">Ketua Himpunan</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-3 text-right sm:text-left">
+                <div class="text-sm">
+                    <p class="text-pink-100">Selamat datang,</p>
+                    <p class="font-semibold text-base" id="welcome-user"></p>
+                </div>
+                <button onclick="logout()" class="logout-btn">
+                    <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                    Logout
+                </button>
             </div>
         </header>
-        
-        <section id="voting-section" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Calon Kandidat Pilihan</h2>
-            <div id="options" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
-            
-            <div id="voted-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mt-6" role="alert">
-                <span class="font-bold">Terima kasih!</span> Anda telah berhasil memberikan suara. Silakan lihat hasilnya di bawah.
+
+        <!-- Calon Kandidat -->
+        <section id="voting-section" class="mb-10">
+
+            <h2 class="section-title text-2xl sm:text-3xl font-bold mb-6">Calon Kandidat</h2>
+
+            <div id="options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div id="voted-message"
+                class="hidden bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-xl mt-6 card font-medium">
+                <span class="font-semibold">✓ Terima kasih!</span> Suara Anda telah tercatat dengan aman.
             </div>
         </section>
 
-        <hr class="my-8 border-gray-300">
+        <hr class="my-8 border-gray-200">
 
+        <!-- Hasil Real-Time -->
         <section>
-            <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Hasil Suara Real-Time</h2>
-            <ul id="results" class="space-y-4">
-                </ul>
+            <h2 class="section-title text-2xl sm:text-3xl font-bold mb-6">Hasil Suara Real-Time</h2>
+
+            <ul id="results" class="space-y-3"></ul>
         </section>
-        
+
     </div>
 
     <script src="script.js" defer></script>
+
     <script>
-        // Menampilkan nama user di header
-        document.getElementById('welcome-user').textContent = localStorage.getItem("username");
+        document.getElementById("welcome-user").textContent =
+            localStorage.getItem("username");
 
         function logout() {
             localStorage.removeItem("voter_id");
@@ -61,5 +197,6 @@
             window.location.href = "login.html";
         }
     </script>
+
 </body>
 </html>
