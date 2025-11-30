@@ -5,32 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem E-Voting Real-Time</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        // const SERVER_URL = "http://localhost:8080";
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script> <script>
         const SERVER_URL = `http://${window.location.hostname}:8080`;
-        
 
         const voter_id = localStorage.getItem("voter_id");
         if (!voter_id) {
             window.location.href = "login.html";
         }
     </script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
         * {
             font-family: 'Inter', sans-serif;
         }
-
         body {
             background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
         }
-
-        /* Modern card with enhanced shadow and refined styling */
         .card {
             background: white;
             border-radius: 0.875rem;
@@ -38,13 +29,10 @@
             transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
             border: 1px solid rgba(0, 0, 0, 0.03);
         }
-
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
-
-        /* Refined vote button with modern gradient and premium effects */
         .vote-btn {
             background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
             transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
@@ -52,30 +40,23 @@
             position: relative;
             overflow: hidden;
         }
-
         .vote-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(233, 30, 99, 0.25);
             filter: brightness(1.05);
         }
-
         .vote-btn:active {
             transform: translateY(0);
         }
-
         .title-gradient {
             background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
         }
-
-        /* Modern header with sleek design */
         .modern-header {
             background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
             border-radius: 1.125rem;
             box-shadow: 0 4px 24px rgba(233, 30, 99, 0.15);
             transition: all 0.3s ease;
         }
-
-        /* Exclusive logout button styling */
         .logout-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 1.5px solid rgba(255, 255, 255, 0.3);
@@ -92,25 +73,20 @@
             gap: 0.5rem;
             white-space: nowrap;
         }
-
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateY(-1px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
-
         .logout-btn:active {
             transform: translateY(0);
         }
-
-        /* Logout icon styling */
         .logout-icon {
             width: 18px;
             height: 18px;
             display: inline-block;
         }
-
         .result-card {
             background: white;
             border-radius: 0.875rem;
@@ -118,8 +94,6 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             border: 1px solid rgba(0, 0, 0, 0.03);
         }
-
-        /* Section titles with refined styling */
         .section-title {
             background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
             -webkit-background-clip: text;
@@ -127,19 +101,13 @@
             background-clip: text;
             font-weight: 700;
         }
-
-        /* Smooth transitions for all interactive elements */
         button {
             transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
         }
     </style>
 </head>
-
 <body class="min-h-screen p-4">
-
     <div class="max-w-5xl mx-auto">
-
-        <!-- Modern sleek header with premium logout button -->
         <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
             <div>
                 <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">E-Voting</h1>
@@ -159,14 +127,9 @@
                 </button>
             </div>
         </header>
-
-        <!-- Calon Kandidat -->
         <section id="voting-section" class="mb-10">
-
             <h2 class="section-title text-2xl sm:text-3xl font-bold mb-6">Calon Kandidat</h2>
-
             <div id="options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
             <div id="voted-message"
                 class="hidden bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-xl mt-6 card font-medium">
                 <span class="font-semibold">✓ Terima kasih!</span> Suara Anda telah tercatat dengan aman.
@@ -174,18 +137,18 @@
         </section>
 
         <hr class="my-8 border-gray-200">
-
-        <!-- Hasil Real-Time -->
         <section>
             <h2 class="section-title text-2xl sm:text-3xl font-bold mb-6">Hasil Suara Real-Time</h2>
-
+            
+            <div class="card p-6 mb-8">
+                <canvas id="voteChart"></canvas>
+            </div>
+            
             <ul id="results" class="space-y-3"></ul>
         </section>
-
     </div>
 
     <script src="script.js" defer></script>
-
     <script>
         document.getElementById("welcome-user").textContent =
             localStorage.getItem("username");
@@ -197,6 +160,5 @@
             window.location.href = "login.html";
         }
     </script>
-
 </body>
 </html>
