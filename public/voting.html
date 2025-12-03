@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Voting - E-Voting HMIF ITATS</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <script>
+        const SERVER_URL = `http://${window.location.hostname}:8080`;
+        const voter_id = localStorage.getItem("voter_id");
+        if (!voter_id) window.location.href = "login.html";
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * { font-family: 'Inter', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        .modern-header {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            border-radius: 1.125rem;
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* NAVBAR SLIM */
+        .header-logo {
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: .25s ease;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .logout-icon {
+            width: 17px;
+            height: 17px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.875rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: .3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .candidate-photo {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: .7rem;
+            border: 2px solid #e91e63;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4">
+
+    <!-- HEADER -->
+    <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
+
+        <!-- LEFT LOGO + TITLE -->
+        <div class="flex items-center space-x-3">
+            <img src="./image/hima-infor.png"
+                 class="header-logo"
+                 onerror="this.src='https://placehold.co/100x50?text=LOGO'">
+
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold">E-Voting HMIF ITATS</h1>
+                <p class="text-pink-100 text-xs sm:text-sm">Hasil Voting Ketua Umum HMIF</p>
+            </div>
+        </div>
+
+        <!-- RIGHT MENU -->
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+
+            <div class="text-right sm:text-left">
+                <p class="text-pink-100 text-xs">Selamat datang,</p>
+                <p class="font-semibold text-sm" id="welcome-user"></p>
+            </div>
+
+            <a href="index.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                Beranda
+            </a>
+
+            <a href="visi-misi.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Visi & Misi
+            </a>
+
+            <a href="hasil-voting.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm0 6h14v-2H7v2zM3 19h2v-2H3v2zm4-14v2h14V5H7zm-4 2h2V5H3v2z"/>
+                </svg>
+                Hasil Voting
+            </a>
+
+            <button onclick="logout()" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4
+                            c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+
+    </header>
+
+    <div class="max-w-5xl mx-auto">
+
+        <h2 class="section-title text-3xl font-bold mb-6">Hasil Voting Real-Time</h2>
+
+        <!-- CHART -->
+        <div class="card p-6 mb-8">
+            <canvas id="voteChart"></canvas>
+        </div>
+
+        <!-- LIST HASIL -->
+        <ul id="results" class="space-y-4"></ul>
+    </div>
+
+    <script>
+        document.getElementById("welcome-user").textContent = localStorage.getItem("username");
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        let chartInstance = null;
+
+        async function loadResults() {
+            try {
+                const response = await fetch(`${SERVER_URL}/results`);
+                const data = await response.json();
+                const candidates = data.results;
+
+                const labels = candidates.map(c => c.name);
+                const votes = candidates.map(c => c.votes);
+
+                // BAR CHART
+                const ctx = document.getElementById("voteChart").getContext("2d");
+
+                if (chartInstance) chartInstance.destroy();
+
+                chartInstance = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: "Jumlah Suara",
+                            data: votes,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+
+                // LIST DETAIL
+                document.getElementById("results").innerHTML = candidates.map(c => `
+                    <li class="card p-4 flex items-center gap-4">
+                        <img src="${SERVER_URL}/uploads/${c.photo || 'default.jpg'}"
+                             class="candidate-photo"
+                             onerror="this.src='https://placehold.co/80x80?text=Foto';">
+
+                        <div>
+                            <p class="text-xl font-semibold">${c.name}</p>
+                            <p class="text-sm text-gray-600">No. Urut: ${c.no_urut}</p>
+                            <p class="text-lg font-bold mt-1 text-pink-600">${c.votes} Suara</p>
+                        </div>
+                    </li>
+                `).join("");
+
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        }
+
+        loadResults();
+        setInterval(loadResults, 2000);
+    </script>
+
+</body>
+
+</html>

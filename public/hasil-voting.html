@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Voting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        const SERVER_URL = `http://${window.location.hostname}:8080`;
+        const voter_id = localStorage.getItem("voter_id");
+        if (!voter_id) window.location.href = "login.html";
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        }
+
+        .modern-header {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            border-radius: 1.125rem;
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.15);
+        }
+
+        .header-logo {
+            height: 70px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: .25s ease;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .logout-icon {
+            width: 17px;
+            height: 17px;
+        }
+    </style>
+
+</head>
+<body class="min-h-screen p-4">
+
+    <!-- ================= HEADER NAVIGATION ================= -->
+    <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
+
+        <div class="flex items-center space-x-3">
+            <img src="./image/hima-infor.png" 
+                 class="header-logo" 
+                 onerror="this.src='https://placehold.co/100x50?text=LOGO'">
+
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold">E-Voting HMIF ITATS</h1>
+                <p class="text-pink-100 text-xs sm:text-sm">Hasil Voting Ketua Umum HMIF</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+
+            <div class="text-right sm:text-left">
+                <p class="text-pink-100 text-xs">Selamat datang,</p>
+                <p class="font-semibold text-sm" id="welcome-user"></p>
+            </div>
+
+            <!-- MENU BUTTONS -->
+            <a href="index.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                Beranda
+            </a>
+
+            <a href="visi-misi.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Visi & Misi
+            </a>
+
+            <a href="hasil-voting.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm0 6h14v-2H7v2zM3 19h2v-2H3v2zm4-14v2h14V5H7zm-4 2h2V5H3v2z"/>
+                </svg>
+                Hasil Voting
+            </a>
+
+            <button onclick="logout()" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4
+                            c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                Logout
+            </button>
+
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <div class="max-w-5xl mx-auto">
+
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">📊 Hasil Sementara Voting</h2>
+
+        <!-- TOTAL SUARA -->
+        <div id="total-suara" class="text-lg font-semibold mb-6 text-gray-700">
+            Memuat total suara...
+        </div>
+
+        <!-- KOTAK KANDIDAT -->
+        <div id="candidate-list" class="grid sm:grid-cols-2 gap-6">
+            <!-- Data kandidat akan dimuat dengan JS -->
+        </div>
+
+    </div>
+    <script src="hasil-voting.js"></script>
+
+</body>
+</html>

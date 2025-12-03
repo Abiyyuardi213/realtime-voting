@@ -116,44 +116,60 @@
     </style>
 </head>
 <body class="min-h-screen p-4">
+    <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
+        <!-- Logo dan Judul -->
+        <div class="flex items-center space-x-4">
+            <img id="header-logo"
+                src="./image/hima-infor.png"
+                alt="Logo HMIF ITATS"
+                class="header-logo"
+                onerror="this.onerror=null; this.src='https://placehold.co/80x40?text=LOGO';"
+            >
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">E-Voting HMIF ITATS</h1>
+                <p class="text-pink-100 text-sm mt-1">
+                    Ketua Umum Himpunan Program Studi Teknik Informatika
+                </p>
+            </div>
+        </div>
+
+        <!-- Selamat Datang + Menu -->
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-3 text-right sm:text-left">
+
+            <div class="text-sm">
+                <p class="text-pink-100">Selamat datang,</p>
+                <p class="font-semibold text-base" id="welcome-user"></p>
+            </div>
+
+            <!-- MENU VISI MISI -->
+            <a href="visi-misi.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Visi & Misi
+            </a>
+
+            <!-- 🔥 MENU HASIL VOTING (baru ditambahkan) -->
+            <a href="hasil-voting.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm0 6h14v-2H7v2zM3 19h2v-2H3v2zm4-14v2h14V5H7zm-4 2h2V5H3v2z"/>
+                </svg>
+                Hasil Voting
+            </a>
+
+            <!-- BUTTON LOGOUT -->
+            <button onclick="logout()" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4
+                            c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                Logout
+            </button>
+
+        </div>
+    </header>
+
     <div class="max-w-5xl mx-auto">
-        <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
-            <!-- Logo dan Judul -->
-            <div class="flex items-center space-x-4">
-                <!-- Logo Gambar (Ganti URL Placeholder ini dengan URL Gambar Anda!) -->
-                <img id="header-logo"
-                    src="./image/hima-infor.png"
-                    alt="Logo HMIF ITATS"
-                    class="header-logo"
-                    onerror="this.onerror=null; this.src='https://placehold.co/80x40?text=LOGO';"
-                >
-                <div>
-                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">E-Voting HMIF ITATS</h1>
-                    <p class="text-pink-100 text-sm mt-1">Ketua Umum Himpunan Program Studi Teknik Informatika</p>
-                </div>
-            </div>
-
-            <!-- Selamat Datang dan Logout -->
-            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-3 text-right sm:text-left">
-                <div class="text-sm">
-                    <p class="text-pink-100">Selamat datang,</p>
-                    <p class="font-semibold text-base" id="welcome-user"></p>
-                </div>
-                <a href="visi-misi.html" class="logout-btn">
-                    <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                    </svg>
-                    Visi & Misi
-                </a>
-
-                <button onclick="logout()" class="logout-btn">
-                    <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-                    </svg>
-                    Logout
-                </button>
-            </div>
-        </header>
         <section id="voting-section" class="mb-10">
             <h2 class="section-title text-2xl sm:text-3xl font-bold mb-6">Calon Kandidat</h2>
             <div id="options" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>

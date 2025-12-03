@@ -27,6 +27,32 @@
             height: 70px;
         }
 
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: .25s ease;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .logout-icon {
+            width: 17px;
+            height: 17px;
+        }
+
         .card {
             background: white;
             border-radius: 1rem;
@@ -44,23 +70,44 @@
 </head>
 <body class="min-h-screen p-4">
 
-    <div class="max-w-5xl mx-auto">
-        <!-- HEADER -->
-        <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
-            <div class="flex items-center space-x-4">
-                <img src="./image/hima-infor.png" class="header-logo"
-                     onerror="this.src='https://placehold.co/100x50?text=LOGO'">
-                <div>
-                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Visi & Misi Kandidat</h1>
-                    <p class="text-pink-100 text-sm mt-1">Pemilihan Ketua Umum HMIF ITATS</p>
-                </div>
+    <header class="modern-header p-6 mb-8 flex justify-between items-center text-white">
+        <div class="flex items-center space-x-4">
+            <img src="./image/hima-infor.png" class="header-logo"
+                    onerror="this.src='https://placehold.co/100x50?text=LOGO'">
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Visi & Misi Kandidat</h1>
+                <p class="text-pink-100 text-sm mt-1">Pemilihan Ketua Umum HMIF ITATS</p>
             </div>
+        </div>
+
+        <!-- RIGHT MENU -->
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+            <a href="index.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                Beranda
+            </a>
+
+            <a href="hasil-voting.html" class="logout-btn">
+                <svg class="logout-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm0 6h14v-2H7v2zM3 19h2v-2H3v2zm4-14v2h14V5H7zm-4 2h2V5H3v2z"/>
+                </svg>
+                Hasil Voting
+            </a>
 
             <a href="index.html"
-               class="bg-white/20 backdrop-blur-lg border border-white/40 px-4 py-2 rounded-lg font-medium hover:bg-white/30 transition">
+                class="bg-white/20 backdrop-blur-lg border border-white/40 px-4 py-2 rounded-lg font-medium hover:bg-white/30 transition">
                 ← Kembali
             </a>
-        </header>
+        </div>
+
+        
+    </header>
+
+    <div class="max-w-5xl mx-auto">
+        <!-- HEADER -->
+        
 
         <!-- LIST VISI MISI -->
         <section>

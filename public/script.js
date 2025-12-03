@@ -31,12 +31,60 @@ fetch(`${SERVER_URL}/options`)
         });
     });
 
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+// ws.onmessage = (event) => {
+//     const data = JSON.parse(event.data);
 
-    if (data.type === "update") {
-        renderOptions(data.options);
-        renderResults(data.options);
+//     if (data.type === "update") {
+//         renderOptions(data.options);
+//         renderResults(data.options);
+//     }
+// };
+
+ws.onmessage = (event) => {
+    let data;
+
+    try {
+        data = JSON.parse(event.data);
+    } catch (e) {
+        console.warn("WebSocket menerima data non-JSON:", event.data);
+        return;
+    }
+
+    switch (data.type) {
+
+        case "update":
+            if (data.options) {
+                renderOptions(data.options);
+                renderResults(data.options);
+            }
+            break;
+
+        case "vote":
+            console.log("Vote baru diterima:", data);
+            fetch(`${SERVER_URL}/options`)
+                .then(res => res.json())
+                .then(opts => {
+                    renderOptions(opts);
+                    renderResults(opts);
+                });
+            break;
+
+        case "ping":
+            ws.send(JSON.stringify({ type: "pong" }));
+            break;
+
+        case "announcement":
+            Swal.fire({
+                icon: "info",
+                title: "Pengumuman",
+                text: data.message || "Informasi terbaru",
+                confirmButtonColor: "#e91e63"
+            });
+            break;
+
+        default:
+            console.warn("Tipe pesan tidak dikenal:", data);
+            break;
     }
 };
 
