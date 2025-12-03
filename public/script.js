@@ -23,8 +23,6 @@ fetch(`${SERVER_URL}/options`)
     })
     .catch((e) => {
         console.error("Gagal konek ke server API:", e);
-        // alert("Gagal konek ke server API! Pastikan server (Node.js) berjalan.");
-
         Swal.fire({
             icon: "error",
             title: "Gagal Terhubung",
@@ -56,13 +54,6 @@ function renderOptions(options) {
         card.innerHTML += `<h3 class="text-xl font-bold text-gray-900 text-center mb-2">${opt.name}</h3>`;
         card.innerHTML += `<p class="text-sm text-gray-500 mb-4">NPM: ${opt.npm || '-'}</p>`;
         
-        card.innerHTML += `<div class="w-full text-left space-y-2 mb-4">
-            <h4 class="font-semibold text-pink-500">Visi:</h4>
-            <p class="text-sm text-gray-600 italic">${opt.visi}</p>
-            <h4 class="font-semibold text-pink-500">Misi:</h4>
-            <p class="text-sm text-gray-600">${opt.misi.replace(/\n/g, '<br>')}</p>
-        </div>`;
-
         const btn = document.createElement("button");
         btn.innerHTML = IS_VOTED ? "SUDAH MEMILIH" : "PILIH INI";
         btn.className = IS_VOTED 
@@ -70,11 +61,6 @@ function renderOptions(options) {
             : "mt-auto w-full vote-btn text-white font-bold py-2 rounded-lg transition";
             
         btn.disabled = IS_VOTED;
-        // btn.onclick = () => {
-        //     if (confirm(`Apakah Anda yakin memilih ${opt.name} (No. Urut ${opt.no_urut})? Pilihan tidak bisa diubah.`)) {
-        //         vote(opt.id);
-        //     }
-        // };
 
         btn.onclick = () => {
             Swal.fire({
@@ -228,8 +214,6 @@ function updateChart(options) {
 
 async function vote(optionId) {
     if (IS_VOTED) {
-        // alert("Anda sudah memilih dan tidak bisa memilih lagi!");
-
         Swal.fire({
             icon: "warning",
             title: "Sudah Memilih",
@@ -249,8 +233,6 @@ async function vote(optionId) {
         const result = await response.json();
 
         if (result.error) {
-            // alert(result.message);
-
             Swal.fire({
                 icon: "error",
                 title: "Gagal",
@@ -264,8 +246,6 @@ async function vote(optionId) {
             }
 
         } else if (result.success) {
-            // alert("Suara Anda berhasil dicatat!");
-
             Swal.fire({
                 icon: "success",
                 title: "Berhasil!",
@@ -280,8 +260,6 @@ async function vote(optionId) {
         }
         
     } catch (e) {
-        // alert("Terjadi kesalahan saat mengirim suara ke server.");
-
         Swal.fire({
             icon: "error",
             title: "Kesalahan",
